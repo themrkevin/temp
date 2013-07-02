@@ -22,19 +22,150 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <p>Hello world! This is HTML5 Boilerplate.</p>
+        <div id="memberBios"></div>
+        <ul id="membersListing"></ul>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
         <script src="js/main.js"></script>
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
+        <script id="templateBios" type="bios/template">
+            <div class="memberInfo">
+                <h2>{{name}}</h2>
+                <p class="wrap">{{bio}}</p>
+            </div>
+        </script>
+
+        <script id="templateListing" type="listing/template">
+            <li data-slide='{{number}}'><a href="#"><img src="{{src}}" /></a></li>
+        </script>
+
+        <script type="text/javascript">
+            (function ($) {
+
+                var templateBios = $.trim($('#templateBios').html()),
+                        templateListing = $.trim($('#templateListing').html()),
+
+                        bios = $('#memberBios'),
+                        memberListing = $('#membersListing'),
+
+                        listing = '',
+                        members = '',
+
+                        board = [
+                            {
+                                'name': "Dr. Andrew Weil, MD",
+                                'bio': "A Harvard Medical School graduate, Dr. Weil is a world-renowned expert on medicinal herbs, mind-body interactions and healing systems. He is the founder and Director of the Program in Integrative Medicine (PIM) at University of Arizona, and a best-selling author, whose books include Spontaneous Healing and Eight Weeks to Optimum Health.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_weil.jpg"
+                            },
+                            {
+                                'name': "Walter Willett, MD",
+                                'bio': "Chairman of Nutrition at the Harvard School of Public Health and a professor of medicine at Harvard Medical School, Dr. Willett is the author of Eat, Drink, and Be Healthy: The Harvard Medical School Guide to Healthy Eating.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_willett.jpg"
+                            },
+                            {
+                                'name': "Joel Fuhrman, MD",
+                                'bio': "He is a family physician who specializes in preventing and reversing disease through nutritional and natural methods, one of the country\"s leading experts on nutritional healing and bestselling author of several books including Eat for Health: Lose Weight, Keep it Off and Look Younger, Live Longer. Fuhrman is also a nutritional chef and public speaker who educates and motivates audiences to make life-saving changes.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_fuhrman.jpg"
+                            },
+                            {
+                                'name': "David Katz, MD",
+                                'bio': "Renowned expert on weight control, nutrition and preventative medicine, David Katz, MD is author of the Flavor Point Diet and the Flavor-Full Diet, and the founder and director of the Yale Prevention Research Center.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_katz.jpg"
+                            },
+                            {
+                                'name': "Harville Hendrix, Ph.D.",
+                                'bio': "Mr Hendrix's therapy is practiced in 30 countries by over 2000 therapists. Together with his wife, they lecture, teach workshops and have authored numerous books on intimate relationships and parenting. Harville is also an author of several books including the NY Times best seller Getting the Love You Want: A Guide for Couples.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_hendrix.jpg"
+                            },
+                            {
+                                'name': "Lynn Goldstein, MS, RD, CDN",
+                                'bio': "A registered dietician and Integrative Nutrition graduate, she has a private practice with a primary focus in gastrointestinal cancer. She has served as a staff dietitian for New York Presbyterian Hospital and Beth Israel ALS Center and as a nutritional educator for the Jay Monahan Center of Gastrointestinal Health in New York.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_goldstein.jpg"
+                            },
+                            {
+                                'name': "Bernie Siegel, MD",
+                                'bio': "Author of several best-selling books including: Love, Medicine &amp; Miracles; Peace, Love &amp; Healing and How to Live Between Office Visits. As a physician he has cared for and counseled thousands with life threatening illnesses. He continues to break new ground in the field of healing.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_seigel.jpg"
+                            },
+                            {
+                                'name': "Sally Fallon Morell",
+                                'bio': "Sally Fallon Morell is a journalist, chef, nutrition researcher, community activist, and the author of Nourishing Traditions: The Cookbook that Challenges Politically Correct Nutrition and the Diet Dictocrats and Eat Fat Lose Fat. She is also the founding president of the Weston A. Price Foundation for wise traditions in food, farming and the healing arts.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_morell.jpg"
+                            },
+                            {
+                                'name': "John Douillard, DC",
+                                'bio': "Dr. John Douillard, DC has written and produced numerous health and fitness books, CDs, and DVDs. He has been teaching and lecturing internationally for 25 years and publishes a free wellness video-newsletter filled with the latest studies and research. He was the Director of Player Development for the New Jersey Nets in the NBA and currently directs the LifeSpa- Ayurvedic Retreat Center in Boulder, CO, where he lives with his wife and six children.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_douillard.jpg"
+                            },
+                            {
+                                'name': "Stephan Rechtschaffen, MD",
+                                'bio': "Dr. Rechtschaffen is a holistic physician who uses concepts of time and healing as the focus for developing optimal health. He is the coauthor of Vitality and Wellness and the author of Timeshifting</. These interests have drawn him to living and working in the more mindful and slower-paced environment of Blue Spirit Retreat in Costa Rica.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_rechtschaffen.jpg"
+                            },
+                            {
+                                'name': "David Wolfe",
+                                'bio': "Mr. Wolfe is the world authority on raw food nutrition, co-founder of TheBestDayEver.com online health magazine and is President of The Fruit Tree Planting Foundation. David is the author of many best-selling books including <i>Eating for Beauty, The Sunfood Diet Success System, Naked Chocolate</i> and <i>The LongevityNOW Program</i>.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_wolfe.jpg"
+                            },
+                            {
+                                'name': "Colette Heimowitz, MS",
+                                'bio': "Colette Heimowitz manages public relations, directs research efforts, designs continuing medical education programs and directs the Atkins Speakers Bureau. In addition, she serves as a member of the Atkins Nutritionals New Product Development Committee. She holds a master's degree in clinical nutrition.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_heimowitz.jpg"
+                            },
+                            {
+                                'name': "Howard Lyman",
+                                'bio': "Fourth-generation family farmer in Montana, former president of Earth Save, and the activist that turned Oprah Winfrey against hamburgers, Mr. Lyman has become an influential voice for family farmers.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_lyman.jpg"
+                            },
+                            {
+                                'name': "Paul Pitchford, MS",
+                                'bio': "Highly-acclaimed author of the encyclopedic Healing with Whole Foods: Oriental Traditions and Modern Nutrition, Dr. Pitchford's gentle approach is a life-changing inspiration towards living in balance with greater awareness.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_pitchford.jpg"
+                            } ,
+                            {
+                                'name': "Barry Sears, Ph.D.",
+                                'bio': "Dr. Sears, a former MIT researcher, is the founder of the Zone Diet and a pioneer in biotechnology. He has developed drug-delivery systems for cancer and heart patients, holds 12 patents for cancer treatments and dietary control of hormones and is the author of more than 10 books about the Zone Diet.",
+                                'image': "http://s3.amazonaws.com/integrativenutrition/Board_Members/board_member_sears.jpg"
+                            }
+                        ];
+
+                $.each(board, function(ind, obj) {
+
+                    members += templateBios
+                            .replace(/{{number}}/i, ind)
+                            .replace(/{{name}}/i, obj.name)
+                            .replace(/{{bio}}/i, obj.bio);
+
+                    listing += templateListing
+                            .replace(/{{number}}/i, ind)
+                            .replace(/{{src}}/i, obj.image);
+                });
+
+                bios.append(members);
+                memberListing.append(listing).on('click', 'li', function(e){
+
+                    var memberInfo = $('.memberInfo').hide();
+
+                    var bm = $(this).addClass('active')
+                                    .siblings('li')
+                                    .removeClass('active')
+                                    .end(),
+
+                            who = parseInt(bm.data('slide'), 10),
+
+                            slideInfo = $(memberInfo[who]);
+
+                    slideInfo.fadeIn(450);
+
+                    e.preventDefault();
+                    return false;
+                });
+
+                memberListing.find('li:first').trigger('click');
+
+            })(jQuery);
         </script>
     </body>
 </html>
